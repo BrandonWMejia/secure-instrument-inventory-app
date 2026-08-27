@@ -1,0 +1,4 @@
+Instrument_UID,Instrument_ID,Instrument Name,Instrument Make,Instrument Model,Instrument Serial Number,Condition
+example-uid-001,ASAX-001,Alto Saxophone,Yamaha,YAS-26,EXAMPLE-SERIAL-001,Good
+example-uid-002,TPT-001,Trumpet,Bach,TR300,EXAMPLE-SERIAL-002,Fair
+example-uid-003,CLAR-001,Clarinet,Selmer,CL301,EXAMPLE-SERIAL-003,Good

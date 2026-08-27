@@ -1,0 +1,4 @@
+Instrument_UID,InstrumentID,Instrument,Make,Model,Serial,Condition,Status,CurrentStudentID,CurrentStudentName,DateOut,DateIn,RepairStatus,Notes
+example-uid-001,ASAX-001,Alto Saxophone,Yamaha,YAS-26,EXAMPLE-SERIAL-001,Good,IN,,,,,,Ready for checkout
+example-uid-002,TPT-001,Trumpet,Bach,TR300,EXAMPLE-SERIAL-002,Fair,OUT,100001,"Student, Example",2026-08-26 09:00:00,,,Returned bell needs inspection
+example-uid-003,CLAR-001,Clarinet,Selmer,CL301,EXAMPLE-SERIAL-003,Good,IN,,,,,Needs Repair,Pad leak

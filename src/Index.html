@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <style>
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --border:#e6e8ef;
+        --text:#111827;
+        --muted:#6b7280;
+        --ok:#0b6b2f;
+        --err:#b00020;
+        --navy:#10233f;
+        --blue:#2563eb;
+        --gold:#e1b51f;
+        --gold-deep:#a96f00;
+        --gold-soft:#fff5c7;
+        --green:#138a52;
+        --red:#c93645;
+        --radius:20px;
+        --shadow:0 18px 46px rgba(25,43,76,.11);
+      }
+      *{ box-sizing:border-box; }
+      body{
+        margin:0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        min-height:100vh;
+        background:
+          radial-gradient(circle at 15% 0%, rgba(37,99,235,.16), transparent 28rem),
+          linear-gradient(180deg, #eef4ff 0, #f7f9fc 34rem);
+        color:var(--text);
+      }
+      .wrap{
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 24px 14px 44px;
+      }
+      .topbar{
+        position:relative;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        margin-bottom:26px;
+        padding-bottom:14px;
+      }
+      .topbar::after{
+        content:"";
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        height:3px;
+        border-radius:999px;
+        background:linear-gradient(90deg, var(--gold), #ffe477 42%, transparent 90%);
+      }
+      .brand{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        min-width:0;
+      }
+      .band-logo, .brand-mark{
+        width:78px;
+        height:78px;
+        flex:0 0 auto;
+        filter:drop-shadow(0 8px 14px rgba(16,35,63,.18));
+      }
+      .brand-mark{
+        display:grid;
+        place-items:center;
+        border:3px solid var(--gold);
+        border-radius:24px;
+        color:var(--gold);
+        background:var(--navy);
+        font-size:38px;
+        font-weight:950;
+      }
+      .brand-title{
+        margin:0;
+        font-size:clamp(19px, 3vw, 27px);
+        font-weight:900;
+        letter-spacing:-.04em;
+      }
+      .brand-subtitle{
+        margin-top:3px;
+        color:var(--muted);
+        font-size:13px;
+      }
+      .district{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:7px 9px 7px 12px;
+        border:1px solid rgba(225,181,31,.42);
+        border-radius:16px;
+        background:rgba(255,255,255,.72);
+      }
+      .district span{
+        max-width:112px;
+        color:var(--muted);
+        font-size:11px;
+        font-weight:800;
+        line-height:1.25;
+        text-align:right;
+      }
+      .district-logo, .district-mark{
+        width:58px;
+        height:58px;
+        border-radius:50%;
+      }
+      .district-mark{
+        display:grid;
+        place-items:center;
+        border:2px solid var(--navy);
+        color:var(--navy);
+        background:#fff;
+        font-size:24px;
+        font-weight:950;
+      }
+      .card{
+        background:rgba(255,255,255,.94);
+        border:1px solid rgba(229,233,240,.92);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow:var(--shadow);
+        backdrop-filter:blur(14px);
+      }
+      .scan-card{
+        border-top:3px solid var(--gold);
+      }
+      .title{
+        font-size: 18px;
+        font-weight: 900;
+        margin: 0 0 4px 0;
+      }
+      .muted{
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.25rem;
+      }
+      .label{
+        font-weight: 800;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      .divider{
+        height:1px;
+        background:var(--border);
+        margin: 12px 0;
+      }
+
+      input, textarea, select, button{
+        width:100%;
+        font-size:16px;
+        border-radius: 12px;
+        border:1px solid var(--border);
+        background:#fff;
+        padding: 10px 12px;
+        outline: none;
+      }
+      input:focus, textarea:focus, select:focus{
+        border-color:var(--gold);
+        box-shadow:0 0 0 4px rgba(225,181,31,.18);
+      }
+      textarea{
+        resize: vertical;
+        min-height: 90px;
+      }
+
+      .btn{
+        border:none;
+        font-weight:900;
+        padding: 12px 14px;
+        color:#fff;
+        border-radius: 12px;
+        cursor:pointer;
+        min-height:46px;
+        transition:transform .18s ease, filter .18s ease, opacity .18s ease;
+      }
+      .btn-blue{
+        color:var(--text);
+        background:linear-gradient(135deg, #f1ca36, var(--gold));
+        box-shadow:0 8px 18px rgba(169,111,0,.18);
+      }
+      .btn-green{ background: var(--green); }
+      .btn-red{ background: var(--red); }
+      .btn-gray{ background:var(--navy); }
+      .btn:hover:not(:disabled){ transform:translateY(-1px); filter:brightness(1.05); }
+      .btn:disabled{ opacity:.58; cursor:wait; }
+      button:focus-visible, summary:focus-visible, a:focus-visible{
+        outline:3px solid var(--gold);
+        outline-offset:3px;
+      }
+      .btn:active{ transform: translateY(1px); }
+      .btn-link{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        text-decoration:none;
+        text-align:center;
+      }
+
+      .msg{
+        font-size: 14px;
+        margin-top: 10px;
+        font-weight: 800;
+      }
+      .msg.ok{ color: var(--ok); }
+      .msg.error{ color: var(--err); }
+      .msg.muted{ color: var(--muted); font-weight: 700; }
+      .toast-stack{
+        position:fixed;
+        z-index:2000;
+        top:18px;
+        right:18px;
+        display:grid;
+        gap:10px;
+        width:min(360px, calc(100% - 36px));
+      }
+      .toast{
+        padding:13px 15px;
+        border-radius:13px;
+        color:#fff;
+        background:var(--navy);
+        box-shadow:0 14px 34px rgba(16,35,63,.24);
+        font-size:13px;
+        font-weight:800;
+        animation:toast-in .2s ease-out;
+      }
+      .toast.ok{ background:var(--green); }
+      .toast.error{ background:var(--red); }
+      @keyframes toast-in{ from{ opacity:0; transform:translateY(-8px); } }
+
+      .hidden{ display:none; }
+      .modal-backdrop{
+        position:fixed;
+        inset:0;
+        z-index:1000;
+        background:rgba(17,24,39,.62);
+        padding:16px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .modal-backdrop.hidden{ display:none; }
+      .modal-card{
+        width:min(560px, 100%);
+        max-height:90vh;
+        overflow:auto;
+        background:var(--card);
+        border:1px solid rgba(225,181,31,.42);
+        border-radius:var(--radius);
+        padding:22px;
+        box-shadow:0 20px 60px rgba(17,24,39,.3);
+      }
+
+      /* --- Layout primitives --- */
+      .stack{
+        display:flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* FIX: input + button share a row and align center with consistent height */
+      .load-grid{
+        display:flex;
+        align-items:center;       /* center vertically with input */
+        gap: 10px;
+        flex-wrap: wrap;          /* mobile-safe wrap */
+      }
+      .load-grid > .load-left{
+        flex: 1;
+        min-width: 220px;         /* prevents collapsing on small widths */
+      }
+      .load-grid > .load-right{
+        flex: 0 0 auto;
+        min-width: 160px;
+      }
+      /* Keep the label spacer consistent (for visual alignment) */
+      .load-grid .label-spacer{
+        visibility:hidden;
+      }
+      /* Ensure load button visually matches input height */
+      .load-grid .btn{
+        white-space: nowrap;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      /* Key/value boxes */
+      .kv{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      @media (min-width: 720px){
+        .kv{
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .kv .box{
+        border:1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        background:#fbfcfe;
+      }
+      .kv .k{ font-size: 12px; color:var(--muted); font-weight:800; margin-bottom: 6px; }
+      .kv .v{ font-size: 14px; font-weight:900; }
+
+      /* Student+Note grid */
+      .student-note-grid{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+      @media (min-width: 720px){
+        .student-note-grid{
+          grid-template-columns: 340px 1fr;
+        }
+      }
+
+      /* Buttons */
+      .btn-row{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      @media (min-width: 720px){
+        .btn-row{
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+
+      /* Status pill */
+      .statusline{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap:10px;
+      }
+      .pill{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-weight: 900;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .pill::before{
+        content:"";
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        background:currentColor;
+      }
+      .pill.in{ background:#e6ffed; color:#137333; }
+      .pill.out{ background:#ffeef0; color:#a0111f; }
+
+      .instrument-card{
+        overflow:hidden;
+        color:#fff;
+        border-color:rgba(225,181,31,.58);
+        background:var(--navy);
+      }
+      .instrument-card .muted{ color:#b9c7db; }
+      .instrument-card .kv .box{
+        border-color:rgba(255,255,255,.10);
+        background:rgba(255,255,255,.08);
+      }
+      .instrument-card .kv .k{ color:#b9c7db; }
+      .instrument-card .divider{ background:rgba(255,255,255,.14); }
+      .instrument-card input,
+      .instrument-card textarea{ color:var(--text); }
+      .instrument-card .hint{ color:#b9c7db; }
+      .repair-alert{
+        margin-top:12px;
+        padding:11px 13px;
+        border:1px solid rgba(245,216,91,.55);
+        border-radius:13px;
+        color:#3f2b00;
+        background:#ffefb2;
+        font-weight:900;
+      }
+      .instrument-eyebrow{
+        color:#f5d85b !important;
+        letter-spacing:.13em;
+        text-transform:uppercase;
+      }
+      .section-title::after{
+        content:"";
+        display:block;
+        width:34px;
+        height:3px;
+        margin-top:7px;
+        border-radius:999px;
+        background:var(--gold);
+      }
+      .dashboard-grid{
+        display:grid;
+        grid-template-columns:repeat(2, 1fr);
+        gap:10px;
+        margin-top:12px;
+      }
+      .dashboard-stat{
+        padding:13px;
+        border:1px solid var(--border);
+        border-radius:14px;
+        background:#fbfcfe;
+      }
+      .dashboard-stat span{ display:block; color:var(--muted); font-size:11px; font-weight:800; }
+      .dashboard-stat strong{ display:block; margin-top:3px; font-size:22px; color:var(--navy); }
+      .audit-progress{
+        height:9px;
+        overflow:hidden;
+        margin-top:9px;
+        border-radius:999px;
+        background:#e8edf4;
+      }
+      .audit-progress > div{ height:100%; width:0; background:linear-gradient(90deg, var(--gold), #f3d453); }
+
+      .hint{
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+        font-weight: 700;
+      }
+
+      details summary{
+        cursor:pointer;
+        font-size:16px;
+        font-weight:900;
+      }
+      details summary::marker{ color:var(--gold-deep); }
+      .admin-grid{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+      .suggestion-wrap{ position:relative; }
+      .suggestion-menu{
+        position:absolute;
+        z-index:50;
+        top:100%;
+        left:0;
+        right:0;
+        max-height:220px;
+        overflow-y:auto;
+        margin-top:4px;
+        padding:4px;
+        background:#fff;
+        border:1px solid var(--border);
+        border-radius:12px;
+        box-shadow:0 10px 30px rgba(17,24,39,.16);
+      }
+      .suggestion-option{
+        display:block;
+        width:100%;
+        padding:10px 12px;
+        border:0;
+        border-radius:8px;
+        background:#fff;
+        color:var(--text);
+        text-align:left;
+        cursor:pointer;
+      }
+      .suggestion-option:hover,
+      .suggestion-option:focus{ background:#eef4ff; }
+      @media (min-width: 720px){
+        .admin-grid{
+          grid-template-columns:1fr 1fr;
+        }
+        .dashboard-grid{ grid-template-columns:repeat(5, 1fr); }
+      }
+      @media (max-width: 719px){
+        .wrap{ padding-top:14px; }
+        .topbar{ align-items:center; }
+        .band-logo, .brand-mark{ width:62px; height:62px; }
+        .district{ padding:5px; border-radius:50%; }
+        .district span{ display:none; }
+        .district-logo, .district-mark{ width:46px; height:46px; }
+        .card{ padding:16px; border-radius:18px; }
+        .brand-subtitle{ font-size:11px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+    <div class="wrap">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">M</div>
+          <div>
+            <div class="brand-title">Instrument Checkout</div>
+            <div class="brand-subtitle">Example High School Music Program</div>
+          </div>
+        </div>
+        <div class="district" title="Example School District">
+          <span>Example School District</span>
+          <div class="district-mark" aria-hidden="true">D</div>
+        </div>
+      </header>
+
+      <!-- Load Instrument -->
+      <div class="card scan-card">
+        <div class="title section-title">Instrument Scan</div>
+        <div class="muted">Scan a QR that opens this page with <b>?inst=ID</b>, or type the Instrument ID below.</div>
+
+        <div class="divider"></div>
+
+        <!-- INPUT + BUTTON ROW -->
+        <div class="load-grid">
+          <div class="load-left">
+            <div class="label">Instrument ID</div>
+            <input id="instId" placeholder="ASAX-001" autocomplete="off" autocapitalize="none" />
+          </div>
+
+          <div class="load-right">
+            <div class="label label-spacer">&nbsp;</div>
+            <button id="loadInstrumentButton" class="btn btn-gray" onclick="loadInstrument()">Load Instrument</button>
+          </div>
+        </div>
+
+        <!-- HINT moved outside the horizontal row so it doesn't affect alignment -->
+        <div class="hint">Example: TPT-001</div>
+
+        <div id="msg" class="msg muted" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Instrument Card -->
+      <div id="instrumentCard" class="card instrument-card hidden">
+        <div class="statusline">
+          <div>
+            <div class="muted instrument-eyebrow" style="font-weight:900; font-size:12px;">Instrument</div>
+            <div class="title" id="instTitle" style="margin:2px 0 0 0;"></div>
+          </div>
+          <div id="statusBadge"></div>
+        </div>
+
+        <div class="kv">
+          <div class="box">
+            <div class="k">Instrument Details</div>
+            <div class="v" id="instrumentDetails">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Condition</div>
+            <div class="v" id="serialCondition">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Availability</div>
+            <div class="v" id="currentStudent">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Repair Status</div>
+            <div class="v" id="dates">—</div>
+          </div>
+        </div>
+        <div id="repairAlert" class="repair-alert hidden" role="alert"></div>
+
+        <div class="divider"></div>
+
+        <!-- Student + Note -->
+        <div class="student-note-grid">
+          <div>
+            <div class="label">Enter your Student ID</div>
+            <input id="studentIdInput" placeholder="Tap or type Student ID" inputmode="numeric" />
+            <div class="hint">Only registered Student IDs can check instruments in or out.</div>
+          </div>
+
+          <div>
+            <div class="label">Note (optional unless Override)</div>
+            <textarea id="note" placeholder="Ex: swapped case, reed issue, missing neckstrap, override reason..."></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Signature -->
+        <div class="stack">
+          <div>
+            <div class="label">Signature (required for OUT + IN) — Last, First</div>
+            <input id="signature" placeholder="Last, First" autocomplete="off" />
+            <div class="hint">Must match the name on record for the selected Student ID.</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Buttons -->
+        <div class="btn-row">
+          <button id="signOutButton" class="btn btn-blue transaction-button" onclick="signOut(false)">Sign OUT</button>
+          <button id="overrideOutButton" class="btn btn-red transaction-button" onclick="signOut(true)">Override OUT (requires note)</button>
+          <button id="signInButton" class="btn btn-green transaction-button" onclick="signIn()">Sign IN</button>
+        </div>
+      </div>
+
+      <!-- Student Registration Notice -->
+      <div class="card">
+        <div class="title section-title" style="font-size:16px;">Student Registration</div>
+        <div class="muted">Student not registered? A parent/guardian must complete the Instrument Consent Form before checkout. Please contact a band director if assistance is needed.</div>
+        <div style="margin-top:10px;">
+          <a
+            class="btn btn-blue btn-link"
+            href="https://example.com/instrument-consent-form"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Open Instrument Consent Form</a>
+        </div>
+      </div>
+
+      <!-- Admin Tools -->
+      <div class="card">
+        <details id="adminDetails">
+          <summary>Admin Tools</summary>
+          <div class="muted" style="margin-top:8px;">
+            Authorized band directors may manually add instruments or students.
+          </div>
+
+          <div class="divider"></div>
+
+          <form id="adminLoginForm" onsubmit="submitAdminLogin(event)">
+            <div id="adminAccessStatus" class="msg muted" role="status" aria-live="polite">Open Admin Tools to check Google account access.</div>
+            <div style="margin-top:10px;">
+              <button id="checkGoogleAdminButton" class="btn btn-blue" type="button" onclick="checkGoogleAdminAccess(true)">Check Google Admin Access</button>
+            </div>
+            <div class="divider"></div>
+            <div class="label">Admin Password</div>
+            <input id="adminPassword" type="password" required autocomplete="current-password" />
+            <div style="margin-top:10px;">
+              <button id="adminLoginButton" class="btn btn-gray" type="submit">Unlock Admin Section</button>
+            </div>
+          </form>
+
+          <div id="adminTools" class="hidden">
+            <section aria-labelledby="dashboardTitle">
+              <div id="dashboardTitle" class="title section-title" style="font-size:16px;">Inventory Dashboard</div>
+              <div class="dashboard-grid">
+                <div class="dashboard-stat"><span>Total Instruments</span><strong id="dashboardTotal">—</strong></div>
+                <div class="dashboard-stat"><span>Checked IN</span><strong id="dashboardIn">—</strong></div>
+                <div class="dashboard-stat"><span>Checked OUT</span><strong id="dashboardOut">—</strong></div>
+                <div class="dashboard-stat"><span>Repair Holds</span><strong id="dashboardRepair">—</strong></div>
+                <div class="dashboard-stat"><span>Audit Remaining</span><strong id="dashboardAuditRemaining">—</strong></div>
+              </div>
+              <div class="audit-progress" aria-label="Audit completion"><div id="auditProgressBar"></div></div>
+              <div id="auditProgressText" class="hint">Enter an audit session to view progress.</div>
+            </section>
+
+            <div class="divider"></div>
+
+            <form id="addInstrumentForm" onsubmit="submitNewInstrument(event)">
+              <div class="title" style="font-size:16px;">Add Instrument</div>
+              <div class="admin-grid" style="margin-top:10px;">
+                <div class="suggestion-wrap">
+                  <div class="label">Instrument Name</div>
+                  <input id="adminInstrumentName" required placeholder="Select or type a new name" autocomplete="off" />
+                  <div id="adminInstrumentNameMenu" class="suggestion-menu hidden"></div>
+                  <div class="hint">Choose an existing name or type a new one.</div>
+                </div>
+                <div class="suggestion-wrap">
+                  <div class="label">Make</div>
+                  <input id="adminMake" placeholder="Select or type a new make" autocomplete="off" />
+                  <div id="adminMakeMenu" class="suggestion-menu hidden"></div>
+                  <div class="hint">Suggestions match the selected instrument name.</div>
+                </div>
+                <div class="suggestion-wrap">
+                  <div class="label">Model</div>
+                  <input id="adminModel" placeholder="Select or type a new model" autocomplete="off" />
+                  <div id="adminModelMenu" class="suggestion-menu hidden"></div>
+                  <div class="hint">Suggestions match the selected instrument name.</div>
+                </div>
+                <div>
+                  <div class="label">Serial</div>
+                  <input id="adminSerial" placeholder="Serial number" autocomplete="off" />
+                </div>
+                <div>
+                  <div class="label">Condition</div>
+                  <input id="adminCondition" placeholder="Good" autocomplete="off" />
+                </div>
+              </div>
+
+              <div style="margin-top:10px;">
+                <button id="addInstrumentButton" class="btn btn-gray" type="submit">Add Instrument</button>
+              </div>
+            </form>
+
+            <div class="divider"></div>
+
+            <form id="addStudentForm" onsubmit="submitAdminStudent(event)">
+              <div class="title" style="font-size:16px;">Admin: Add Student</div>
+              <div class="muted">Writes Student ID to column B and Student Name to column C of the Students sheet.</div>
+              <div class="admin-grid" style="margin-top:10px;">
+                <div>
+                  <div class="label">Student ID (numbers only)</div>
+                  <input id="adminStudentId" required inputmode="numeric" autocomplete="off" />
+                </div>
+                <div>
+                  <div class="label">Student Name (Last, First)</div>
+                  <input id="adminStudentName" required placeholder="Student, Example" autocomplete="off" />
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <button id="addStudentButton" class="btn btn-gray" type="submit">Add Student</button>
+              </div>
+            </form>
+
+            <div class="divider"></div>
+
+            <form id="auditForm" onsubmit="submitAuditResult(event)">
+              <div class="title" style="font-size:16px;">Inventory Audit</div>
+              <div class="muted">Physically verify an instrument and append the result to Inventory_Audit_Log.</div>
+
+              <div class="admin-grid" style="margin-top:10px;">
+                <div>
+                  <div class="label">Audit Session</div>
+                  <input id="auditSession" required placeholder="End-of-Year 2026" autocomplete="off" />
+                </div>
+                <div>
+                  <div class="label">Instrument ID</div>
+                  <input id="auditInstrumentId" required placeholder="TPT-001" autocomplete="off" />
+                </div>
+              </div>
+
+              <div style="margin-top:10px;">
+                <button id="loadAuditButton" class="btn btn-blue" type="button" onclick="loadAuditInstrument()">Load Audit Instrument</button>
+              </div>
+
+              <div id="auditDetails" class="hidden">
+                <div class="kv">
+                  <div class="box">
+                    <div class="k">Instrument</div>
+                    <div class="v" id="auditInstrumentDetails">—</div>
+                  </div>
+                  <div class="box">
+                    <div class="k">Expected Record</div>
+                    <div class="v" id="auditExpectedDetails">—</div>
+                  </div>
+                </div>
+
+                <div class="admin-grid" style="margin-top:12px;">
+                  <div>
+                    <div class="label">Physically Found?</div>
+                    <select id="auditFound" required>
+                      <option value="">Select</option>
+                      <option value="YES">Yes</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="label">Serial Matches?</div>
+                    <select id="auditSerialMatches">
+                      <option value="">Not checked</option>
+                      <option value="YES">Yes</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="label">Case Present?</div>
+                    <select id="auditCasePresent">
+                      <option value="">Not checked</option>
+                      <option value="YES">Yes</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="label">Accessories Complete?</div>
+                    <select id="auditAccessoriesComplete">
+                      <option value="">Not checked</option>
+                      <option value="YES">Yes</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="label">Physical Condition</div>
+                    <select id="auditCondition">
+                      <option value="">Not assessed</option>
+                      <option value="Good">Good</option>
+                      <option value="Needs Cleaning">Needs Cleaning</option>
+                      <option value="Needs Repair">Needs Repair</option>
+                      <option value="Missing Accessories">Missing Accessories</option>
+                      <option value="Wrong Case">Wrong Case</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="label">Repair Needed?</div>
+                    <select id="auditRepairNeeded">
+                      <option value="">Not assessed</option>
+                      <option value="YES">Yes</option>
+                      <option value="NO">No</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="margin-top:10px;">
+                  <div class="label">Audit Notes</div>
+                  <textarea id="auditNotes" placeholder="Missing mouthpiece, serial mismatch, damage details..."></textarea>
+                </div>
+
+                <div style="margin-top:10px;">
+                  <button id="saveAuditButton" class="btn btn-green" type="submit">Save Audit Result</button>
+                </div>
+              </div>
+              <div id="auditMsg" class="msg muted" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+          <div id="adminMsg" class="msg muted" role="status" aria-live="polite"></div>
+        </details>
+      </div>
+
+    </div>
+
+    <div id="signInConfirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="signInConfirmTitle">
+      <div class="modal-card">
+        <div id="signInConfirmTitle" class="title">Confirm Instrument Sign-In</div>
+        <div class="muted">Review these details before completing the sign-in transaction.</div>
+        <div class="kv">
+          <div class="box"><div class="k">Instrument ID</div><div class="v" id="confirmSignInInstrument">—</div></div>
+          <div class="box"><div class="k">Student ID</div><div class="v" id="confirmSignInStudent">—</div></div>
+          <div class="box"><div class="k">Signature</div><div class="v" id="confirmSignInSignature">—</div></div>
+          <div class="box"><div class="k">Note</div><div class="v" id="confirmSignInNote">—</div></div>
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-gray" type="button" onclick="cancelSignInConfirmation()">Cancel</button>
+          <button id="confirmSignInButton" class="btn btn-green" type="button" onclick="confirmSignIn()">Confirm Sign IN</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="duplicateSerialModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="duplicateSerialTitle">
+      <div class="modal-card">
+        <div id="duplicateSerialTitle" class="title">Duplicate Serial Number Warning</div>
+        <div class="muted">This serial number already exists. Confirm the physical instrument before adding another record.</div>
+        <div id="duplicateSerialMatches" class="kv"></div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-gray" type="button" onclick="cancelDuplicateSerial()">Cancel</button>
+          <button id="confirmDuplicateSerialButton" class="btn btn-red" type="button" onclick="confirmDuplicateSerial()">Add Anyway</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="overrideConfirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="overrideConfirmTitle">
+      <div class="modal-card">
+        <div id="overrideConfirmTitle" class="title">Confirm Override OUT</div>
+        <div class="muted">Override replaces the current checkout assignment. Enter the Admin password to continue. This does not unlock Admin Tools.</div>
+        <div class="kv">
+          <div class="box"><div class="k">Instrument ID</div><div class="v" id="confirmOverrideInstrument">—</div></div>
+          <div class="box"><div class="k">New Student ID</div><div class="v" id="confirmOverrideStudent">—</div></div>
+          <div class="box"><div class="k">Required Note</div><div class="v" id="confirmOverrideNote">—</div></div>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="label">Admin Password</div>
+          <input id="overrideAdminPassword" type="password" autocomplete="current-password" />
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-gray" type="button" onclick="cancelOverrideConfirmation()">Cancel</button>
+          <button id="confirmOverrideButton" class="btn btn-red" type="button" onclick="confirmOverrideOut()">Confirm Override OUT</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const INITIAL_INST = "<?= (initialInst || '').replace(/"/g, '\\"') ?>";
+      let students = [];
+      let filtered = [];
+      let adminToken = '';
+      let adminInstrumentNames = [];
+      let adminMakesByInstrument = {};
+      let adminModelsByInstrument = {};
+      let loadedAuditInstrumentId = '';
+      let pendingSignIn = null;
+      let pendingInstrumentForm = null;
+      let pendingOverrideOut = null;
+      let currentRepairHold = false;
+
+      function showToast(text, kind) {
+        if (!text || (kind !== 'ok' && kind !== 'error')) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast ' + kind;
+        toast.textContent = text;
+        document.getElementById('toastStack').appendChild(toast);
+        window.setTimeout(() => toast.remove(), 3600);
+      }
+
+      function setMsg(text, kind) {
+        const el = document.getElementById('msg');
+        el.className = 'msg ' + (kind || 'muted');
+        el.textContent = text || '';
+        showToast(text, kind);
+      }
+
+      function setTransactionBusy(busy) {
+        document.querySelectorAll('.transaction-button').forEach(button => {
+          const checkoutButton = button.id === 'signOutButton' || button.id === 'overrideOutButton';
+          button.disabled = busy || (currentRepairHold && checkoutButton);
+        });
+      }
+
+      function showInstrumentCard(show) {
+        document.getElementById('instrumentCard').classList.toggle('hidden', !show);
+      }
+
+      function setStatusPill(status) {
+        const container = document.getElementById('statusBadge');
+        container.innerHTML = '';
+        const s = (status || '').toUpperCase();
+        const pill = document.createElement('span');
+        pill.className = 'pill ' + (s === 'OUT' ? 'out' : 'in');
+        pill.textContent = s || '—';
+        container.appendChild(pill);
+      }
+
+      function setInstrumentUI(inst) {
+        document.getElementById('instTitle').textContent = inst.InstrumentID || '';
+        setStatusPill(inst.Status);
+        document.getElementById('instrumentDetails').textContent =
+          [inst.InstrumentName, inst.Make, inst.Model].filter(Boolean).join(' • ') || '—';
+        document.getElementById('serialCondition').textContent = inst.Condition || '—';
+        document.getElementById('currentStudent').textContent =
+          String(inst.Status || '').toUpperCase() === 'OUT' ? 'Checked out' : 'Available';
+
+        const repair = String(inst.RepairStatus || '').trim();
+        document.getElementById('dates').textContent = repair || 'None';
+        const clearValues = ['NO', 'NONE', 'CLEAR', 'CLEARED', 'COMPLETE', 'COMPLETED', 'READY'];
+        const onHold = repair && clearValues.indexOf(repair.toUpperCase()) === -1;
+        currentRepairHold = !!onHold;
+        const alert = document.getElementById('repairAlert');
+        alert.textContent = onHold ? `REPAIR HOLD: ${repair}. Checkout is blocked.` : '';
+        alert.classList.toggle('hidden', !onHold);
+        document.getElementById('signOutButton').disabled = !!onHold;
+        document.getElementById('overrideOutButton').disabled = !!onHold;
+      }
+
+      function loadInstrument() {
+        const instId = document.getElementById('instId').value.trim();
+        if (!instId) return setMsg('Enter or scan an InstrumentID.', 'error');
+
+        const button = document.getElementById('loadInstrumentButton');
+        button.disabled = true;
+        setMsg('Loading instrument...', 'muted');
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res.ok) {
+            showInstrumentCard(false);
+            return setMsg(res.error || 'Could not load instrument.', 'error');
+          }
+          setInstrumentUI(res.instrument);
+          showInstrumentCard(true);
+          setMsg('Instrument loaded.', 'ok');
+          document.getElementById('note').value = '';
+          document.getElementById('signature').value = '';
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          showInstrumentCard(false);
+          setMsg(String(err), 'error');
+        }).getInstrumentById(instId);
+      }
+
+      function renderStudentOptions() {
+        // Intentionally empty in the public demo. Student IDs are typed by the
+        // user and validated server-side without exposing the student roster.
+      }
+
+      // Live-filter datalist while typing
+      document.addEventListener('input', (e) => {
+        if (e.target && e.target.id === 'studentIdInput') {
+          e.target.value = e.target.value.replace(/\D/g, '');
+        }
+      });
+
+      function signOut(override) {
+        const instId = document.getElementById('instId').value.trim();
+        const studentId = document.getElementById('studentIdInput').value.trim();
+        const signature = document.getElementById('signature').value.trim();
+        const note = document.getElementById('note').value.trim();
+
+        if (!instId) return setMsg('Missing InstrumentID.', 'error');
+        if (!studentId) return setMsg('Select your Student ID.', 'error');
+        if (!/^\d+$/.test(studentId)) return setMsg('Student ID must be numbers only.', 'error');
+        if (!signature) return setMsg('Signature is required (Last, First).', 'error');
+        if (override && !note) return setMsg('Override requires a note.', 'error');
+
+        if (override) {
+          pendingOverrideOut = { instId, studentId, signature, note };
+          document.getElementById('confirmOverrideInstrument').textContent = instId;
+          document.getElementById('confirmOverrideStudent').textContent = studentId;
+          document.getElementById('confirmOverrideNote').textContent = note;
+          document.getElementById('overrideAdminPassword').value = '';
+          document.getElementById('overrideConfirmModal').classList.remove('hidden');
+          document.getElementById('overrideAdminPassword').focus();
+          return;
+        }
+
+        performSignOut({ instId, studentId, signature, note }, false, '');
+      }
+
+      function performSignOut(request, override, overridePassword) {
+        setTransactionBusy(true);
+        setMsg('Signing out...', 'muted');
+        google.script.run.withSuccessHandler(res => {
+          setTransactionBusy(false);
+          if (!res.ok) return setMsg(res.error || 'Sign out failed.', 'error');
+          setInstrumentUI(res.instrument);
+          setMsg(override ? 'Signed OUT (override).' : 'Signed OUT.', 'ok');
+          document.getElementById('note').value = '';
+          document.getElementById('signature').value = '';
+          loadAdminDashboard();
+        }).withFailureHandler(err => {
+          setTransactionBusy(false);
+          setMsg(String(err), 'error');
+        })
+          .signOutInstrument(request.instId, request.studentId, request.signature, request.note, override, overridePassword);
+      }
+
+      function cancelOverrideConfirmation() {
+        pendingOverrideOut = null;
+        document.getElementById('overrideAdminPassword').value = '';
+        document.getElementById('overrideConfirmModal').classList.add('hidden');
+        setMsg('Override cancelled. No transaction was recorded.', 'muted');
+      }
+
+      function confirmOverrideOut() {
+        if (!pendingOverrideOut) return cancelOverrideConfirmation();
+
+        const password = document.getElementById('overrideAdminPassword').value;
+        if (!password) return setMsg('Admin password is required for Override OUT.', 'error');
+
+        const request = pendingOverrideOut;
+        const button = document.getElementById('confirmOverrideButton');
+        button.disabled = true;
+        setTransactionBusy(true);
+        setMsg('Confirming override...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          setTransactionBusy(false);
+          document.getElementById('overrideAdminPassword').value = '';
+          if (!res || !res.ok) {
+            return setMsg((res && res.error) || 'Override failed.', 'error');
+          }
+
+          pendingOverrideOut = null;
+          document.getElementById('overrideConfirmModal').classList.add('hidden');
+          setInstrumentUI(res.instrument);
+          setMsg('Signed OUT (override).', 'ok');
+          document.getElementById('note').value = '';
+          document.getElementById('signature').value = '';
+          loadAdminDashboard();
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          setTransactionBusy(false);
+          document.getElementById('overrideAdminPassword').value = '';
+          setMsg(String(err), 'error');
+        }).signOutInstrument(request.instId, request.studentId, request.signature, request.note, true, password);
+      }
+
+      function signIn() {
+        const instId = document.getElementById('instId').value.trim();
+        const studentId = document.getElementById('studentIdInput').value.trim();
+        const signature = document.getElementById('signature').value.trim();
+        const note = document.getElementById('note').value.trim();
+
+        if (!instId) return setMsg('Missing InstrumentID.', 'error');
+        if (!studentId) return setMsg('Select your Student ID to sign in.', 'error');
+        if (!/^\d+$/.test(studentId)) return setMsg('Student ID must be numbers only.', 'error');
+        if (!signature) return setMsg('Signature is required (Last, First).', 'error');
+
+        pendingSignIn = { instId, studentId, signature, note };
+        document.getElementById('confirmSignInInstrument').textContent = instId;
+        document.getElementById('confirmSignInStudent').textContent = studentId;
+        document.getElementById('confirmSignInSignature').textContent = signature;
+        document.getElementById('confirmSignInNote').textContent = note || '—';
+        document.getElementById('signInConfirmModal').classList.remove('hidden');
+        document.getElementById('confirmSignInButton').focus();
+      }
+
+      function cancelSignInConfirmation() {
+        pendingSignIn = null;
+        document.getElementById('signInConfirmModal').classList.add('hidden');
+        setMsg('Sign-in cancelled. No transaction was recorded.', 'muted');
+      }
+
+      function confirmSignIn() {
+        if (!pendingSignIn) return cancelSignInConfirmation();
+
+        const request = pendingSignIn;
+        const button = document.getElementById('confirmSignInButton');
+        button.disabled = true;
+        setTransactionBusy(true);
+        setMsg('Signing in...', 'muted');
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          setTransactionBusy(false);
+          if (!res.ok) {
+            pendingSignIn = null;
+            document.getElementById('signInConfirmModal').classList.add('hidden');
+            return setMsg(res.error || 'Sign in failed.', 'error');
+          }
+          pendingSignIn = null;
+          document.getElementById('signInConfirmModal').classList.add('hidden');
+          setInstrumentUI(res.instrument);
+          setMsg('Signed IN.', 'ok');
+          document.getElementById('note').value = '';
+          document.getElementById('signature').value = '';
+          loadAdminDashboard();
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          setTransactionBusy(false);
+          pendingSignIn = null;
+          document.getElementById('signInConfirmModal').classList.add('hidden');
+          setMsg(String(err), 'error');
+        }).signInInstrument(request.instId, request.studentId, request.signature, request.note);
+      }
+
+      function setAdminMsg(text, kind) {
+        const el = document.getElementById('adminMsg');
+        el.className = 'msg ' + (kind || 'muted');
+        el.textContent = text || '';
+        showToast(text, kind);
+      }
+
+      function setAdminAccessStatus(text, kind) {
+        const el = document.getElementById('adminAccessStatus');
+        if (!el) return;
+        el.className = 'msg ' + (kind || 'muted');
+        el.textContent = text || '';
+      }
+
+      function renderDashboard(res) {
+        if (!res || !res.ok) return;
+        const counts = res.counts || {};
+        const audit = res.audit || {};
+        document.getElementById('dashboardTotal').textContent = counts.total || 0;
+        document.getElementById('dashboardIn').textContent = counts.in || 0;
+        document.getElementById('dashboardOut').textContent = counts.out || 0;
+        document.getElementById('dashboardRepair').textContent = counts.repair || 0;
+        document.getElementById('dashboardAuditRemaining').textContent = audit.remaining || 0;
+        document.getElementById('auditProgressBar').style.width = `${audit.percent || 0}%`;
+        document.getElementById('auditProgressText').textContent = audit.session
+          ? `${audit.completed || 0} of ${audit.total || 0} instruments audited for ${audit.session} (${audit.percent || 0}%).`
+          : 'Enter an audit session to view progress.';
+      }
+
+      function loadAdminDashboard() {
+        if (!adminToken) return;
+        const session = document.getElementById('auditSession').value.trim();
+        google.script.run.withSuccessHandler(res => {
+          if (res && res.ok) renderDashboard(res);
+        }).getAdminDashboard(adminToken, session);
+      }
+
+      function lockAdminSection() {
+        adminToken = '';
+        loadedAuditInstrumentId = '';
+        document.getElementById('adminTools').classList.add('hidden');
+        document.getElementById('adminLoginForm').classList.remove('hidden');
+      }
+
+      function unlockAdminSection(token, message) {
+        adminToken = token;
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminLoginForm').classList.add('hidden');
+        document.getElementById('adminTools').classList.remove('hidden');
+        setAdminMsg(message || 'Admin section unlocked for 30 minutes.', 'ok');
+        loadAdminInstrumentSuggestions();
+        loadAdminDashboard();
+      }
+
+      function checkGoogleAdminAccess(manual) {
+        if (adminToken) {
+          setAdminAccessStatus('Admin is already unlocked.', 'ok');
+          return;
+        }
+        setAdminAccessStatus('Checking Google account admin access...', 'muted');
+        const button = document.getElementById('checkGoogleAdminButton');
+        if (button) button.disabled = true;
+        google.script.run.withSuccessHandler(res => {
+          if (button) button.disabled = false;
+          if (!res || !res.ok) {
+            setAdminAccessStatus('Google account admin check failed. Password login is still available.', 'error');
+            return;
+          }
+          if (!res.authorized || !res.token) {
+            if (res.email) {
+              setAdminAccessStatus(`Google account detected: ${res.email}. Password login is still available.`, 'muted');
+            } else {
+              setAdminAccessStatus('Google account email was not available to this web app. Password login is still available.', 'muted');
+            }
+            return;
+          }
+          setAdminAccessStatus(`Google account approved: ${res.email}.`, 'ok');
+          unlockAdminSection(res.token, `Admin access granted for ${res.email}.`);
+        }).withFailureHandler(() => {
+          if (button) button.disabled = false;
+          setAdminAccessStatus('Google account admin check was unavailable. Password login is still available.', 'error');
+        }).getAdminAccessStatus();
+      }
+
+      function hideAdminSuggestionMenus() {
+        ['adminInstrumentNameMenu', 'adminMakeMenu', 'adminModelMenu'].forEach(id => {
+          document.getElementById(id).classList.add('hidden');
+        });
+      }
+
+      function renderAdminSuggestions(menuId, inputId, values, show) {
+        const menu = document.getElementById(menuId);
+        const input = document.getElementById(inputId);
+        const query = input.value.trim().toLowerCase();
+        const matches = (values || []).filter(value =>
+          !query || String(value).toLowerCase().includes(query)
+        );
+
+        menu.innerHTML = '';
+        matches.forEach(value => {
+          const option = document.createElement('button');
+          option.type = 'button';
+          option.className = 'suggestion-option';
+          option.textContent = value;
+          option.addEventListener('click', event => {
+            event.preventDefault();
+            input.value = value;
+            menu.classList.add('hidden');
+            if (inputId === 'adminInstrumentName') updateAdminMakeModelSuggestions();
+          });
+          menu.appendChild(option);
+        });
+        menu.classList.toggle('hidden', !show || matches.length === 0);
+      }
+
+      function updateAdminMakeModelSuggestions() {
+        const key = document.getElementById('adminInstrumentName').value.trim().toLowerCase();
+        renderAdminSuggestions('adminMakeMenu', 'adminMake', adminMakesByInstrument[key] || [], false);
+        renderAdminSuggestions('adminModelMenu', 'adminModel', adminModelsByInstrument[key] || [], false);
+      }
+
+      function loadAdminInstrumentSuggestions() {
+        google.script.run.withSuccessHandler(res => {
+          if (!res || !res.ok) {
+            if (res && String(res.error || '').includes('Admin authorization required')) {
+              lockAdminSection();
+            }
+            return setAdminMsg((res && res.error) || 'Could not load instrument suggestions.', 'error');
+          }
+
+          adminInstrumentNames = res.names || [];
+          adminMakesByInstrument = res.makesByInstrument || {};
+          adminModelsByInstrument = res.modelsByInstrument || {};
+          updateAdminMakeModelSuggestions();
+        }).withFailureHandler(err => {
+          setAdminMsg('Could not load instrument suggestions: ' + String(err), 'error');
+        }).listInstrumentSuggestions(adminToken);
+      }
+
+      document.getElementById('adminInstrumentName').addEventListener('focus', () => {
+        renderAdminSuggestions('adminInstrumentNameMenu', 'adminInstrumentName', adminInstrumentNames, true);
+      });
+      document.getElementById('adminInstrumentName').addEventListener('input', () => {
+        renderAdminSuggestions('adminInstrumentNameMenu', 'adminInstrumentName', adminInstrumentNames, true);
+        updateAdminMakeModelSuggestions();
+      });
+      document.getElementById('adminMake').addEventListener('focus', () => {
+        hideAdminSuggestionMenus();
+        const key = document.getElementById('adminInstrumentName').value.trim().toLowerCase();
+        renderAdminSuggestions('adminMakeMenu', 'adminMake', adminMakesByInstrument[key] || [], true);
+      });
+      document.getElementById('adminMake').addEventListener('input', () => {
+        const key = document.getElementById('adminInstrumentName').value.trim().toLowerCase();
+        renderAdminSuggestions('adminMakeMenu', 'adminMake', adminMakesByInstrument[key] || [], true);
+      });
+      document.getElementById('adminModel').addEventListener('focus', () => {
+        hideAdminSuggestionMenus();
+        const key = document.getElementById('adminInstrumentName').value.trim().toLowerCase();
+        renderAdminSuggestions('adminModelMenu', 'adminModel', adminModelsByInstrument[key] || [], true);
+      });
+      document.getElementById('adminModel').addEventListener('input', () => {
+        const key = document.getElementById('adminInstrumentName').value.trim().toLowerCase();
+        renderAdminSuggestions('adminModelMenu', 'adminModel', adminModelsByInstrument[key] || [], true);
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.suggestion-wrap')) hideAdminSuggestionMenus();
+      });
+
+      function submitAdminLogin(event) {
+        event.preventDefault();
+
+        const password = document.getElementById('adminPassword').value;
+        const button = document.getElementById('adminLoginButton');
+        if (!password) return setAdminMsg('Enter the admin password.', 'error');
+
+          button.disabled = true;
+          setAdminMsg('Checking password...', 'muted');
+          setAdminAccessStatus('Checking password...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res || !res.ok) {
+            adminToken = '';
+            return setAdminMsg((res && res.error) || 'Admin login failed.', 'error');
+          }
+
+          unlockAdminSection(res.token, 'Admin section unlocked for 30 minutes.');
+          setAdminAccessStatus('Password login approved.', 'ok');
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          adminToken = '';
+          setAdminMsg(String(err), 'error');
+        }).adminLogin(password);
+      }
+
+      function submitNewInstrument(event) {
+        event.preventDefault();
+
+        if (!adminToken) {
+          return setAdminMsg('Unlock the Admin section first.', 'error');
+        }
+
+        const form = {
+          instrumentName: document.getElementById('adminInstrumentName').value.trim(),
+          make: document.getElementById('adminMake').value.trim(),
+          model: document.getElementById('adminModel').value.trim(),
+          serial: document.getElementById('adminSerial').value.trim(),
+          condition: document.getElementById('adminCondition').value.trim()
+        };
+
+        if (!form.instrumentName) {
+          return setAdminMsg('Instrument Name is required.', 'error');
+        }
+
+        pendingInstrumentForm = form;
+        submitInstrumentData(form, false);
+      }
+
+      function submitInstrumentData(form, confirmDuplicate) {
+        const button = document.getElementById('addInstrumentButton');
+        button.disabled = true;
+        setAdminMsg('Adding instrument...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res || !res.ok) {
+            if (res && res.warning === 'DUPLICATE_SERIAL') {
+              const matches = document.getElementById('duplicateSerialMatches');
+              matches.innerHTML = '';
+              (res.duplicates || []).forEach(item => {
+                const box = document.createElement('div');
+                box.className = 'box';
+                const key = document.createElement('div');
+                key.className = 'k';
+                key.textContent = 'Existing Instrument';
+                const value = document.createElement('div');
+                value.className = 'v';
+                value.textContent = `${item.InstrumentID || 'Unknown ID'} • ${item.InstrumentName || 'Unknown instrument'}`;
+                box.appendChild(key);
+                box.appendChild(value);
+                matches.appendChild(box);
+              });
+              document.getElementById('duplicateSerialModal').classList.remove('hidden');
+              return setAdminMsg(res.error, 'error');
+            }
+            if (res && String(res.error || '').includes('Admin authorization required')) {
+              lockAdminSection();
+            }
+            return setAdminMsg((res && res.error) || 'Could not add instrument.', 'error');
+          }
+
+          document.getElementById('addInstrumentForm').reset();
+          pendingInstrumentForm = null;
+          setAdminMsg(`Instrument added successfully. New Instrument ID: ${res.instrument.Instrument_ID}`, 'ok');
+          loadAdminInstrumentSuggestions();
+          loadAdminDashboard();
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          setAdminMsg(String(err), 'error');
+        }).addInstrument(form, adminToken, confirmDuplicate === true);
+      }
+
+      function cancelDuplicateSerial() {
+        pendingInstrumentForm = null;
+        document.getElementById('duplicateSerialModal').classList.add('hidden');
+        setAdminMsg('Instrument creation cancelled. No record was added.', 'muted');
+      }
+
+      function confirmDuplicateSerial() {
+        if (!pendingInstrumentForm) return cancelDuplicateSerial();
+        const form = pendingInstrumentForm;
+        document.getElementById('duplicateSerialModal').classList.add('hidden');
+        submitInstrumentData(form, true);
+      }
+
+      function submitAdminStudent(event) {
+        event.preventDefault();
+        if (!adminToken) return setAdminMsg('Unlock the Admin section first.', 'error');
+
+        const id = document.getElementById('adminStudentId').value.trim();
+        const name = document.getElementById('adminStudentName').value.trim();
+        if (!id || !name) return setAdminMsg('Enter both Student ID and Student Name.', 'error');
+        if (!/^\d+$/.test(id)) return setAdminMsg('Student ID must be numbers only.', 'error');
+        if (!/^[^,]+,\s*[^,]+$/.test(name)) return setAdminMsg('Student Name must use Last, First format.', 'error');
+
+        const button = document.getElementById('addStudentButton');
+        button.disabled = true;
+        setAdminMsg('Adding student...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res || !res.ok) {
+            if (res && String(res.error || '').includes('Admin authorization required')) {
+              lockAdminSection();
+            }
+            return setAdminMsg((res && res.error) || 'Could not add student.', 'error');
+          }
+
+          document.getElementById('addStudentForm').reset();
+          setAdminMsg(`Student ${res.student.StudentID} added successfully.`, 'ok');
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          setAdminMsg(String(err), 'error');
+        }).addStudent(id, name, adminToken);
+      }
+
+      function setAuditMsg(text, kind) {
+        const el = document.getElementById('auditMsg');
+        el.className = 'msg ' + (kind || 'muted');
+        el.textContent = text || '';
+        showToast(text, kind);
+      }
+
+      function loadAuditInstrument() {
+        if (!adminToken) return setAuditMsg('Unlock the Admin section first.', 'error');
+
+        const instrumentId = document.getElementById('auditInstrumentId').value.trim();
+        if (!instrumentId) return setAuditMsg('Enter or scan an Instrument ID.', 'error');
+
+        const button = document.getElementById('loadAuditButton');
+        button.disabled = true;
+        setAuditMsg('Loading audit instrument...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res || !res.ok) {
+            loadedAuditInstrumentId = '';
+            document.getElementById('auditDetails').classList.add('hidden');
+            if (res && String(res.error || '').includes('Admin authorization required')) {
+              lockAdminSection();
+            }
+            return setAuditMsg((res && res.error) || 'Could not load audit instrument.', 'error');
+          }
+
+          const inst = res.instrument;
+          loadedAuditInstrumentId = inst.InstrumentID;
+          document.getElementById('auditInstrumentId').value = inst.InstrumentID;
+          document.getElementById('auditInstrumentDetails').textContent =
+            `${inst.InstrumentID} • ${inst.InstrumentName || 'Unknown'} • ${inst.Make || '—'} ${inst.Model || ''} • Serial: ${inst.Serial || '—'}`;
+          document.getElementById('auditExpectedDetails').textContent =
+            `Status: ${inst.ExpectedStatus || 'Unknown'} • Student: ${inst.ExpectedStudentName || '—'} (${inst.ExpectedStudentID || '—'}) • Condition: ${inst.Condition || '—'}`;
+          document.getElementById('auditDetails').classList.remove('hidden');
+          setAuditMsg('Instrument loaded for physical audit.', 'ok');
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          loadedAuditInstrumentId = '';
+          document.getElementById('auditDetails').classList.add('hidden');
+          setAuditMsg(String(err), 'error');
+        }).loadAuditInstrument(instrumentId, adminToken);
+      }
+
+      document.getElementById('auditInstrumentId').addEventListener('input', () => {
+        const current = document.getElementById('auditInstrumentId').value.trim();
+        if (loadedAuditInstrumentId && current !== loadedAuditInstrumentId) {
+          loadedAuditInstrumentId = '';
+          document.getElementById('auditDetails').classList.add('hidden');
+          setAuditMsg('Instrument ID changed. Load the instrument again before saving.', 'muted');
+        }
+      });
+
+      function submitAuditResult(event) {
+        event.preventDefault();
+        if (!adminToken) return setAuditMsg('Unlock the Admin section first.', 'error');
+        if (!loadedAuditInstrumentId) return setAuditMsg('Load an instrument before saving an audit result.', 'error');
+
+        const audit = {
+          session: document.getElementById('auditSession').value.trim(),
+          instrumentId: loadedAuditInstrumentId,
+          found: document.getElementById('auditFound').value,
+          serialMatches: document.getElementById('auditSerialMatches').value,
+          casePresent: document.getElementById('auditCasePresent').value,
+          accessoriesComplete: document.getElementById('auditAccessoriesComplete').value,
+          condition: document.getElementById('auditCondition').value,
+          repairNeeded: document.getElementById('auditRepairNeeded').value,
+          notes: document.getElementById('auditNotes').value.trim()
+        };
+
+        if (!audit.session) return setAuditMsg('Audit Session is required.', 'error');
+        if (!audit.found) return setAuditMsg('Select whether the instrument was physically found.', 'error');
+
+        const button = document.getElementById('saveAuditButton');
+        button.disabled = true;
+        setAuditMsg('Saving audit result...', 'muted');
+
+        google.script.run.withSuccessHandler(res => {
+          button.disabled = false;
+          if (!res || !res.ok) {
+            if (res && String(res.error || '').includes('Admin authorization required')) {
+              lockAdminSection();
+            }
+            return setAuditMsg((res && res.error) || 'Could not save audit result.', 'error');
+          }
+
+          const session = document.getElementById('auditSession').value;
+          document.getElementById('auditForm').reset();
+          document.getElementById('auditSession').value = session;
+          document.getElementById('auditDetails').classList.add('hidden');
+          loadedAuditInstrumentId = '';
+          document.getElementById('auditInstrumentId').focus();
+          setAuditMsg(`Audit saved for ${res.instrumentId}. Ready for the next instrument.`, 'ok');
+          loadAdminDashboard();
+        }).withFailureHandler(err => {
+          button.disabled = false;
+          setAuditMsg(String(err), 'error');
+        }).saveAuditResult(audit, adminToken);
+      }
+
+      // Init
+      document.getElementById('instId').value = INITIAL_INST || '';
+      document.getElementById('auditSession').value = `End-of-Year ${new Date().getFullYear()}`;
+      document.getElementById('auditSession').addEventListener('change', loadAdminDashboard);
+      document.getElementById('adminDetails').addEventListener('toggle', event => {
+        if (event.target.open) checkGoogleAdminAccess(false);
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (!document.getElementById('signInConfirmModal').classList.contains('hidden')) cancelSignInConfirmation();
+        else if (!document.getElementById('overrideConfirmModal').classList.contains('hidden')) cancelOverrideConfirmation();
+        else if (!document.getElementById('duplicateSerialModal').classList.contains('hidden')) cancelDuplicateSerial();
+      });
+      checkGoogleAdminAccess();
+      if (INITIAL_INST) loadInstrument();
+    </script>
+  </body>
+</html>
